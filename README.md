@@ -114,4 +114,3 @@ Use these files from `sample_invoices/`:
 - PyMuPDF
 - RapidFuzz
 - SQLite
-- Optional Gemini API via `google-genai`
