@@ -1,0 +1,6 @@
+po_number,vendor_name,vendor_status,po_amount,currency,tolerance_percent,already_invoiced_amount,description
+PO-1001,Acme Office Supplies,APPROVED,50000,INR,5,0,Office chairs and desks
+PO-1002,Northstar Tech Systems,APPROVED,125000,INR,3,0,Laptop accessories and docking stations
+PO-1003,BluePeak Logistics,APPROVED,80000,INR,5,40000,Freight and logistics services
+PO-1004,Vertex Consulting,APPROVED,200000,INR,2,0,Consulting services for automation project
+PO-1005,Unknown Vendor Pvt Ltd,BLOCKED,60000,INR,5,0,Unverified vendor services

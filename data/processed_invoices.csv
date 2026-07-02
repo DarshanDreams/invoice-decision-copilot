@@ -1,0 +1,3 @@
+invoice_number,vendor_name,po_number,total_amount,status
+INV-DUP-001,Acme Office Supplies,PO-1001,25000,APPROVED
+INV-BP-OLD-001,BluePeak Logistics,PO-1003,40000,APPROVED
