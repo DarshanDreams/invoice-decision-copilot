@@ -7,7 +7,6 @@ from utils.invoice_parser import parse_invoice_text
 from utils.po_matcher import match_invoice_to_po
 from utils.decision_engine import make_decision
 from utils.storage import save_run, load_run_history, load_full_run, clear_history
-from utils.ai_reasoner import generate_ai_explanation
 
 
 st.set_page_config(
@@ -68,35 +67,6 @@ def save_run_once(file_name, parsed_invoice, po_match_result, decision_result):
 
     return False
 
-
-def get_ai_explanation_once(parsed_invoice, po_match_result, decision_result):
-    """
-    Avoid regenerating AI explanation on every Streamlit rerun.
-    """
-
-    signature = (
-        parsed_invoice.get("invoice_number"),
-        decision_result.get("decision"),
-        po_match_result.get("matched_po_number")
-    )
-
-    if "ai_explanation_signature" not in st.session_state:
-        st.session_state.ai_explanation_signature = None
-
-    if "ai_explanation_text" not in st.session_state:
-        st.session_state.ai_explanation_text = None
-
-    if st.session_state.ai_explanation_signature != signature:
-        st.session_state.ai_explanation_text = generate_ai_explanation(
-            parsed_invoice,
-            po_match_result,
-            decision_result
-        )
-        st.session_state.ai_explanation_signature = signature
-
-    return st.session_state.ai_explanation_text
-
-
 # -----------------------------
 # Load data
 # -----------------------------
@@ -142,7 +112,7 @@ st.sidebar.markdown(
 - Field parsing  
 - PO matching  
 - AP validation  
-- AI explanation  
+- Business explanation
 - Final decision  
 - Audit history  
 """
@@ -293,22 +263,24 @@ auditable decision.
             for action in decision_result["recommended_actions"]:
                 st.write("- " + action)
 
-            st.markdown("### AI Business Explanation")
+            st.markdown("### Business Decision Explanation")
 
-            ai_explanation = get_ai_explanation_once(
-                parsed_invoice,
-                po_match_result,
-                decision_result
-            )
+            business_explanation = (
+            f'The invoice was classified as {decision_result["decision"]}. '
+            f'{decision_result["summary"]} '
+            'This decision was generated using transparent AP validation checks, including '
+            'invoice field completeness, PO matching, duplicate detection, vendor validation, '
+            'vendor consistency, and PO amount tolerance.')
 
-            st.write(ai_explanation)
+            st.write(business_explanation)
+
 
             audit_payload = {
                 "file_name": uploaded_file.name,
                 "parsed_invoice": parsed_invoice,
                 "po_match_result": po_match_result,
                 "decision_result": decision_result,
-                "ai_explanation": ai_explanation
+                "business_explanation": business_explanation
             }
 
             st.download_button(
